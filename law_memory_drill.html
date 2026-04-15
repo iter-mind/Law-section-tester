@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Law Section Memory — CA Inter May 2026</title>
+<meta name="application-name" content="Law Memory">
+<meta name="description" content="CA Inter Paper 2 Section Memory & Drill Tool">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Law Memory">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:Georgia,serif;background:#0f0f0f;color:#f1f0eb;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+#header{flex-shrink:0;padding:12px 16px 0;background:#0f0f0f;}
+.hsubtag{font-size:9px;letter-spacing:4px;color:#f97316;text-transform:uppercase;text-align:center;margin-bottom:3px;}
+.htitle{font-size:19px;font-weight:bold;color:#fef3c7;text-align:center;margin-bottom:2px;}
+.hdesc{font-size:10px;color:#9ca3af;text-align:center;margin-bottom:10px;}
+#tabs{display:flex;gap:6px;margin-bottom:0;}
+.tab-btn{flex:1;padding:8px 4px;border-radius:8px 8px 0 0;border:1px solid #374151;border-bottom:none;background:transparent;color:#6b7280;font-size:12px;cursor:pointer;font-family:Georgia,serif;}
+.tab-btn.active{border-color:#f97316;background:#1a1a1a;color:#f97316;font-weight:bold;}
+.tab-sub{font-size:8px;margin-top:1px;color:#4b5563;}
+.tab-btn.active .tab-sub{color:#fdba74;}
+.tab-divider{border-bottom:1px solid #374151;}
+#content{flex:1;overflow-y:auto;padding:14px 16px 20px;}
+#content::-webkit-scrollbar{width:3px;}
+#content::-webkit-scrollbar-thumb{background:#374151;border-radius:3px;}
+
+/* FILTERS */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;justify-content:center;}
+input[type=text],select{padding:7px 11px;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#f1f0eb;font-size:12px;font-family:Georgia,serif;outline:none;}
+input[type=text]{width:155px;}
+
+/* CARDS */
+.card{background:#1a1a1a;border-radius:10px;padding:12px 14px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;border-left-width:4px;}
+.card-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.sec-badge{font-family:monospace;font-weight:bold;font-size:12px;padding:3px 9px;border-radius:6px;min-width:64px;text-align:center;}
+.card-title{flex:1;font-size:13px;font-weight:600;color:#f1f0eb;min-width:120px;}
+.freq-tag{font-size:9px;padding:2px 7px;border-radius:12px;border:1px solid;}
+.card-arrow{color:#6b7280;font-size:12px;flex-shrink:0;}
+.card-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #2d2d2d;}
+.card-detail.open{display:block;}
+.detail-ch{font-size:10px;color:#f97316;margin-bottom:5px;letter-spacing:1px;}
+.detail-hook{font-size:12px;color:#fef3c7;line-height:1.7;background:#1f2937;padding:10px 12px;border-radius:8px;border-left:3px solid #f97316;}
+
+/* COUNT */
+.count{text-align:center;font-size:11px;color:#6b7280;margin-bottom:10px;}
+
+/* DRILL CONFIG */
+.drill-box{background:#1a1a1a;border-radius:12px;padding:18px;margin-bottom:14px;}
+.drill-label{font-size:11px;color:#f97316;margin-bottom:5px;font-weight:bold;letter-spacing:1px;}
+select.full{width:100%;margin-bottom:10px;}
+.drill-types{display:flex;gap:8px;margin-bottom:0;}
+.dtype-btn{flex:1;padding:9px 6px;border-radius:8px;border:2px solid #374151;background:transparent;color:#9ca3af;font-size:11px;cursor:pointer;font-family:Georgia,serif;line-height:1.4;}
+.dtype-btn.active{border-color:#f97316;background:#f9731611;color:#f97316;}
+.start-btn{width:100%;padding:14px;border-radius:10px;border:none;background:#f97316;color:white;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;margin-top:10px;}
+
+/* DRILL CARD */
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.progress-bar-bg{background:#1f2937;border-radius:4px;height:4px;margin-bottom:18px;}
+.progress-bar{background:#f97316;height:4px;border-radius:4px;transition:width 0.3s;}
+.q-card{background:#1a1a1a;border:1px solid #374151;border-radius:14px;padding:24px 18px;margin-bottom:14px;min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.q-label{font-size:10px;color:#f97316;letter-spacing:2px;margin-bottom:10px;}
+.q-text{font-size:17px;font-weight:bold;color:#fef3c7;line-height:1.5;}
+.q-ch{font-size:10px;color:#6b7280;margin-top:8px;}
+.reveal-btn{width:100%;padding:14px;border-radius:10px;border:2px solid #f97316;background:transparent;color:#f97316;font-size:14px;font-weight:bold;cursor:pointer;margin-bottom:12px;font-family:Georgia,serif;}
+.ans-box{background:#052e16;border:1px solid #22c55e44;border-radius:12px;padding:14px;margin-bottom:10px;text-align:center;}
+.ans-label{font-size:10px;color:#22c55e;margin-bottom:5px;letter-spacing:1px;}
+.ans-text{font-size:20px;font-weight:bold;color:#4ade80;}
+.ans-sub{font-size:11px;color:#9ca3af;margin-top:3px;}
+.hook-box{background:#1f2937;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#fef3c7;line-height:1.65;border-left:3px solid #f97316;}
+.ans-btns{display:flex;gap:8px;}
+.btn-correct{flex:1;padding:12px;border-radius:10px;border:none;background:#16a34a;color:white;font-size:13px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;}
+.btn-wrong{flex:1;padding:12px;border-radius:10px;border:none;background:#dc2626;color:white;font-size:13px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;}
+.btn-skip{flex:0 0 52px;padding:12px 8px;border-radius:10px;border:1px solid #374151;background:transparent;color:#6b7280;font-size:13px;cursor:pointer;font-family:Georgia,serif;}
+
+/* DONE SCREEN */
+.done-wrap{text-align:center;padding:20px 0;}
+.done-emoji{font-size:44px;margin-bottom:8px;}
+.done-title{font-size:22px;font-weight:bold;color:#fef3c7;margin-bottom:4px;}
+.done-sub{font-size:13px;color:#9ca3af;margin-bottom:20px;}
+.score-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
+.score-box{background:#1a1a1a;border-radius:10px;padding:12px 14px;min-width:78px;}
+.score-num{font-size:26px;font-weight:bold;}
+.score-lbl{font-size:10px;color:#9ca3af;margin-top:2px;}
+.pct-text{font-size:22px;font-weight:bold;margin-bottom:20px;}
+.redrill-btn{width:100%;padding:12px;border-radius:10px;border:1px solid #ef4444;background:#ef444411;color:#ef4444;font-size:13px;cursor:pointer;margin-bottom:10px;font-family:Georgia,serif;}
+.newsession-btn{width:100%;padding:12px;border-radius:10px;border:1px solid #374151;background:transparent;color:#9ca3af;font-size:13px;cursor:pointer;font-family:Georgia,serif;}
+
+/* MAP */
+.map-intro{font-size:12px;color:#9ca3af;text-align:center;margin-bottom:14px;}
+.map-card{display:flex;align-items:center;gap:12px;background:#1a1a1a;border-radius:10px;padding:10px 14px;margin-bottom:8px;border-left:4px solid;}
+.map-range{font-family:monospace;font-weight:bold;font-size:13px;padding:4px 10px;border-radius:6px;min-width:74px;text-align:center;}
+.map-ch{font-size:12px;font-weight:bold;color:#f1f0eb;}
+.map-key{font-size:10px;color:#9ca3af;margin-top:2px;}
+.golden-box{background:#1f2937;border-radius:10px;padding:14px;margin-top:8px;}
+.golden-title{font-size:11px;color:#f97316;margin-bottom:8px;font-weight:bold;}
+.golden-text{font-size:12px;color:#d1d5db;line-height:1.7;}
+
+/* INSTALL BANNER */
+.install-banner{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1f2937;border:1px solid #f97316;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px #00000099;z-index:9999;max-width:340px;width:90%;}
+.install-icon{font-size:22px;flex-shrink:0;}
+.install-text-wrap{flex:1;}
+.install-title{color:#fef3c7;font-size:13px;font-weight:bold;}
+.install-sub{color:#9ca3af;font-size:11px;margin-top:2px;}
+.install-btn{background:#f97316;color:white;border:none;border-radius:8px;padding:8px 13px;font-size:12px;cursor:pointer;font-family:Georgia,serif;font-weight:bold;white-space:nowrap;}
+.install-close{background:transparent;color:#6b7280;border:none;font-size:20px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div class="hsubtag">CA Inter · Paper 2 · May 2026</div>
+    <div class="htitle">Law Section Memory</div>
+    <div class="hdesc">Study · Drill · Master</div>
+    <div id="tabs">
+      <button class="tab-btn active" onclick="switchTab('study',this)">📖 Study<div class="tab-sub">Sections + Hooks</div></button>
+      <button class="tab-btn" onclick="switchTab('drill',this)">⚡ Drill<div class="tab-sub">Test Yourself</div></button>
+      <button class="tab-btn" onclick="switchTab('map',this)">🗺 Map<div class="tab-sub">Section Ranges</div></button>
+    </div>
+    <div class="tab-divider"></div>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const ALL = [
+  {sec:"2",title:"Definitions",ch:"Ch 1 · Introduction",freq:4,hook:"Holding/subsidiary/OPC/KMP — MCQ goldmine. 'Sec 2 = definitions, always 2nd nature.'"},
+  {sec:"3",title:"Kinds of Company",ch:"Ch 2 · Formation",freq:2,hook:"3 kinds — Public, Private, OPC. Section number = number of types."},
+  {sec:"3A",title:"Separate Legal Entity / Effect of Registration",ch:"Ch 2 · Formation",freq:3,hook:"Foundation A. Salomon v Salomon. Company is separate from members."},
+  {sec:"7",title:"Incorporation of Company",ch:"Ch 2 · Formation",freq:2,hook:"7 documents filed with ROC. Lucky 7 = getting incorporated is lucky."},
+  {sec:"8",title:"Section 8 Company (Non-Profit)",ch:"Ch 2 · Formation",freq:3,hook:"Section 8 Company — the section number IS the name. Impossible to forget."},
+  {sec:"9",title:"Effects of Registration",ch:"Ch 2 · Formation",freq:1,hook:"After incorporation (Sec 3), company gets legal effects. 9 = 3² = outcome of formation."},
+  {sec:"10",title:"MOA/AOA as Binding Contract",ch:"Ch 2 · Formation",freq:1,hook:"10 = complete. Binding contract between company and ALL members."},
+  {sec:"10A",title:"Commencement of Business",ch:"Ch 2 · Formation",freq:3,hook:"10A = Action. Before any action (business), declare ready. Within 180 days of incorporation."},
+  {sec:"11",title:"(Omitted)",ch:"Ch 2 · Formation",freq:0,hook:"This section was removed from the Act. If asked = omitted."},
+  {sec:"15",title:"Alteration noted in every copy of MOA/AOA",ch:"Ch 2 · Formation",freq:1,hook:"15 = clerical step. After altering MOA/AOA (13/14), every copy must reflect it."},
+  {sec:"16",title:"Rectification of Name",ch:"Ch 2 · Formation",freq:2,hook:"Sweet 16 but wrong name. CG directs change in 3 months, company complies in 6 months."},
+  {sec:"17",title:"Right of Members to Copies of MOA/AOA",ch:"Ch 2 · Formation",freq:1,hook:"17 = right to know. Members can demand copies."},
+  {sec:"19",title:"Subsidiary not to hold shares in Holding Co",ch:"Ch 2 · Formation",freq:1,hook:"19 = reverse ownership banned. Subsidiary cannot own parent's shares."},
+  {sec:"20",title:"Service of Documents",ch:"Ch 2 · Formation",freq:1,hook:"20 = communication. Post/email/hand delivery."},
+  {sec:"21",title:"Authentication of Documents",ch:"Ch 2 · Formation",freq:1,hook:"21 = adult signature required. MD/Secretary/Director authenticate."},
+  {sec:"22",title:"Execution of Bills, Cheques, Hundies",ch:"Ch 2 · Formation",freq:1,hook:"22 = double sign. Bills and cheques need double authorisation."},
+  {sec:"4",title:"Memorandum of Association — Contents",ch:"Ch 3 · MOA & AOA",freq:3,hook:"4 = close to 5 clauses of MOA (Name, RO, Objects, Liability, Capital). Sec 4 = contents of MOA."},
+  {sec:"5",title:"Articles of Association — Contents",ch:"Ch 3 · MOA & AOA",freq:3,hook:"5th document filed at incorporation. AOA follows MOA just like 4→5."},
+  {sec:"6",title:"Act Overrides MOA/AOA",ch:"Ch 3 · MOA & AOA",freq:1,hook:"6 = supreme law. Companies Act beats anything in MOA/AOA that conflicts."},
+  {sec:"12",title:"Registered Office",ch:"Ch 3 · MOA & AOA",freq:2,hook:"12 = address. 15 days to establish, 30 days to verify."},
+  {sec:"13",title:"Alteration of Memorandum",ch:"Ch 3 · MOA & AOA",freq:3,hook:"13 = MOA. SR + CG/NCLT/RD approval depending on clause."},
+  {sec:"14",title:"Alteration of Articles",ch:"Ch 3 · MOA & AOA",freq:3,hook:"14 = AOA. SR required. Comes right after MOA alteration (13)."},
+  {sec:"18",title:"Conversion of Companies",ch:"Ch 3 · MOA & AOA",freq:3,hook:"18 = adult, can change identity. Private→Public, Public→Private, Unlimited→Limited."},
+  {sec:"23",title:"Kinds of Issue",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"23 = 2+3 = 5 kinds. Public, rights, bonus, private placement, preferential."},
+  {sec:"24",title:"SEBI Powers in Public Issues",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"24 = SEBI watches 24/7. Regulates public issues."},
+  {sec:"25",title:"Deemed Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:3,hook:"25 = disguised. Offer for sale 'deemed' to be prospectus even if it doesn't look like one."},
+  {sec:"26",title:"Contents of Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:2,hook:"26 = 26 letters = exhaustive disclosure. Mandatory matters stated in prospectus."},
+  {sec:"27",title:"Variation of Contract Terms in Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"27 = change of mind. SR + consent of holders needed to vary terms."},
+  {sec:"28",title:"Offer for Sale by Members",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"28 = 25+3. Existing shareholders selling to public — near Sec 25 for a reason."},
+  {sec:"29",title:"Dematerialisation of Securities",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"29 = digital. Mandatory demat for listed companies. No physical certificates."},
+  {sec:"30",title:"Advertisement of Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"30 = public announcement. Conditions for advertising prospectus."},
+  {sec:"31",title:"Shelf Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:3,hook:"31 = 1 year shelf life. Valid for 1 year from first issue. The 1 is at the end of 31."},
+  {sec:"32",title:"Red Herring Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:2,hook:"32 = RHP. Filed before IPO. No price, no quantum. 3+2=5 days before closing = final prospectus."},
+  {sec:"33",title:"Abridged Prospectus",ch:"Ch 4 · Prospectus & Allotment",freq:3,hook:"33 = short short. Two 3s = double short = ABRIDGED. Attached to every application form."},
+  {sec:"34",title:"Criminal Liability for Misstatement",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"34 = jail. Criminal = more serious, comes before civil (35). Imprisonment + fine."},
+  {sec:"35",title:"Civil Liability for Misstatement",ch:"Ch 4 · Prospectus & Allotment",freq:3,hook:"35 = sue. Who is liable + defences (due diligence, expert, withdrawal). 3+5=8 persons liable."},
+  {sec:"36",title:"Fraudulent Inducement Penalty",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"36 = fraud. Inducing someone to invest through fraud. 3+6=9 years imprisonment."},
+  {sec:"37",title:"Class Action Suit",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"37 = group fight. Members/depositors collectively sue company. Minimum 100 members."},
+  {sec:"38",title:"Personation Penalty (Securities)",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"38 = fake identity. Pretending to be someone else to acquire securities."},
+  {sec:"39",title:"Allotment of Securities",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"39 = 3+9=12. Minimum subscription must be received, refund within 15 days of failure."},
+  {sec:"40",title:"Listing on Stock Exchange",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"40 = 4 exchanges. Securities must be listed on recognised stock exchange."},
+  {sec:"41",title:"Global Depository Receipts (GDR)",ch:"Ch 4 · Prospectus & Allotment",freq:1,hook:"41 = global. Indian company issues depository receipts abroad. Opposite of IDR (Sec 390)."},
+  {sec:"42",title:"Private Placement",ch:"Ch 4 · Prospectus & Allotment",freq:3,hook:"42 = answer to everything. Alternative to all public routes. Max 200 persons per class per year."},
+  {sec:"43",title:"Kinds of Share Capital",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"43 = 4+3=7. Two kinds: equity and preference. Sec 43 classifies them."},
+  {sec:"44",title:"Shares as Movable Property",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"44 = 4×4 = movable in 4 directions. Shares transfer freely."},
+  {sec:"45",title:"Numbering of Shares",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"45 = roll number. Every share gets a distinct number."},
+  {sec:"46",title:"Share Certificate",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"46 = issued within 2 months of allotment. 4+6=10 details in certificate."},
+  {sec:"47",title:"Voting Rights",ch:"Ch 5 · Share Capital & Debentures",freq:3,hook:"47 = 4+7=11. Equity votes on ALL. Preference votes ONLY on matters affecting them."},
+  {sec:"48",title:"Variation of Shareholders' Rights",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"48 = 4/8 = half. 3/4 consent of that class needed. Fraction = partial consent."},
+  {sec:"49",title:"Calls on Uniform Basis",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"49 = equal treatment. All same-class shareholders called on uniform basis."},
+  {sec:"50",title:"Advance Calls",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"50 = pay early. Company accepts advance calls, pays interest."},
+  {sec:"51",title:"Dividend on Partly Paid Shares",ch:"Ch 5 · Share Capital & Debentures",freq:3,hook:"51 = proportionate. Partly paid = proportionate dividend. 5+1=6 = partial."},
+  {sec:"52",title:"Securities Premium Account (SPA)",ch:"Ch 5 · Share Capital & Debentures",freq:3,hook:"52 = SPA. Uses: bonus issue, buyback, preliminary expenses, discount on debentures. 5+2=7 uses."},
+  {sec:"53",title:"No Issue at Discount",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"53 = strictly no. Absolute prohibition on shares below face value. Sweat equity is the only exception."},
+  {sec:"54",title:"Sweat Equity Shares",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"54 = sweat. SR needed, 15% of paid-up capital limit, 3-year lock-in."},
+  {sec:"55",title:"Issue and Redemption of Preference Shares",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"55 = 5+5=10, double=20. Maximum 20 years redemption period. Two 5s = 20."},
+  {sec:"56",title:"Transfer and Transmission of Securities",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"56 = SH-4 form. Register within 15 days. 5+6=11 days close to 15."},
+  {sec:"57",title:"Personation Penalty (Shares)",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"57 = fake identity for shares. Mirrors Sec 38. Same crime, different chapter."},
+  {sec:"58",title:"Refusal of Registration of Transfer",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"58 = 56+2. After transfer (56), company can refuse (58). 30-day notice of refusal."},
+  {sec:"59",title:"Rectification of Register of Members",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"59 = fix the register. NCLT orders correction of ROM."},
+  {sec:"60",title:"Notice Showing Capital",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"60 = round number = full picture. All notices show authorised, subscribed, paid-up capital."},
+  {sec:"61",title:"Alteration of Share Capital",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"61 = 6+1=7. OR needed for consolidation, sub-division, cancellation."},
+  {sec:"62",title:"Further Issue of Share Capital (Rights Issue / ESOP)",ch:"Ch 5 · Share Capital & Debentures",freq:4,hook:"62 = Rights. Biggest section in Ch 5. Existing shareholders get FIRST right. 15-30 days offer period."},
+  {sec:"63",title:"Bonus Shares",ch:"Ch 5 · Share Capital & Debentures",freq:3,hook:"63 = 62+1. Right after rights issue comes bonus. Sources: free reserves, SPA, CRR. No partly paid."},
+  {sec:"64",title:"Notice to ROC of Capital Alteration",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"64 = filing. After altering capital (61), notify ROC within 30 days."},
+  {sec:"65",title:"Unlimited Company Reserve Capital",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"65 = rare. Unlimited company converting to limited can designate reserve capital."},
+  {sec:"66",title:"Reduction of Share Capital",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"66 = 6+6=12. Double reduction. Tribunal approval + creditor protection + solvency statement."},
+  {sec:"67",title:"No Financial Assistance for Own Share Purchase",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"67 = self-dealing banned. 6+7=13 = unlucky = forbidden."},
+  {sec:"68",title:"Buyback of Securities",ch:"Ch 5 · Share Capital & Debentures",freq:3,hook:"68 = buy back. 10% Board, 25% SR. 6-month cooling off period."},
+  {sec:"69",title:"Capital Redemption Reserve on Buyback",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"69 = 68+1. After buyback, create CRR equal to nominal value. Always follows 68."},
+  {sec:"70",title:"Prohibition on Buyback in Certain Cases",ch:"Ch 5 · Share Capital & Debentures",freq:1,hook:"70 = 68+2. When buyback is NOT allowed. Default on deposits/debentures = cannot buyback."},
+  {sec:"71",title:"Debentures",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"71 = 7+1=8. DRR, trustee, redemption. Think classic 8% debenture problem."},
+  {sec:"72",title:"Power of Nomination",ch:"Ch 5 · Share Capital & Debentures",freq:2,hook:"72 = last in Ch 5. Nomination is end-of-life provision for shares. Nominee gets shares on death."},
+  {sec:"88",title:"Register of Members (ROM)",ch:"Ch 6 · Membership",freq:2,hook:"88 = double register. ROM + register of debenture holders. Two 8s = two registers."},
+  {sec:"89",title:"Declaration of Beneficial Interest",ch:"Ch 6 · Membership",freq:1,hook:"89 = hidden owner. Beneficial owner different from registered owner. Declare within 30 days."},
+  {sec:"90",title:"Significant Beneficial Owners (SBO)",ch:"Ch 6 · Membership",freq:1,hook:"90 = 90% transparent. 25%+ beneficial interest = register in BEN-1."},
+  {sec:"91",title:"Closure of Register of Members",ch:"Ch 6 · Membership",freq:1,hook:"91 = shut. Max 30 days at a time, 45 days a year. 10 days newspaper notice before closure."},
+  {sec:"92",title:"Annual Return",ch:"Ch 6 · Membership",freq:2,hook:"92 = yearly. MGT-7 filed within 60 days of AGM. 9+2=11 items in annual return."},
+  {sec:"93",title:"Return for Change in Promoter Stake",ch:"Ch 6 · Membership",freq:1,hook:"93 = listed company. Return within 15 days of change."},
+  {sec:"94",title:"Place of Keeping Registers",ch:"Ch 6 · Membership",freq:1,hook:"94 = location. At RO or elsewhere with SR approval."},
+  {sec:"95",title:"Registers as Evidence",ch:"Ch 6 · Membership",freq:1,hook:"95 = prima facie evidence. Courts accept registers without further proof."},
+  {sec:"73",title:"Deposits from Members / Prohibition on Public Deposits",ch:"Ch 7 · Company Deposits",freq:3,hook:"73 = 7 days + 3 conditions. DPT-1, 35% limit, deposit insurance. Accept from members."},
+  {sec:"74",title:"Repayment of Old Deposits (Pre-2013)",ch:"Ch 7 · Company Deposits",freq:1,hook:"74 = transitional. Old deposits — repay within 1 year or maturity whichever earlier."},
+  {sec:"75",title:"Damages for Fraud in Deposits",ch:"Ch 7 · Company Deposits",freq:1,hook:"75 = 7+5=12. Fraud = imprisonment up to 7 years. The 7 is in the section."},
+  {sec:"76",title:"Deposits from Public by Eligible Companies",ch:"Ch 7 · Company Deposits",freq:2,hook:"76 = 73+3. Public deposits = 3 steps after member deposits. Eligible companies + credit rating."},
+  {sec:"76A",title:"Punishment for Deposit Contravention",ch:"Ch 7 · Company Deposits",freq:1,hook:"76A = A for additional penalty. Amendment addition for extra punishment."},
+  {sec:"77",title:"Duty to Register Charges",ch:"Ch 8 · Registration of Charges",freq:3,hook:"77 = double security. Two 7s = double protection for lender. 30 days, CHG-1 form."},
+  {sec:"78",title:"Charge Holder can Register (if Company Fails)",ch:"Ch 8 · Registration of Charges",freq:1,hook:"78 = 77+1. If company fails to register (77), charge holder does it (78)."},
+  {sec:"79",title:"Modification of Charge",ch:"Ch 8 · Registration of Charges",freq:1,hook:"79 = 77+2. Same CHG-1 form. Change in terms of existing charge."},
+  {sec:"80",title:"Notice of Charge (Constructive Notice)",ch:"Ch 8 · Registration of Charges",freq:1,hook:"80 = broadcast. Registered charge = constructive notice to the whole world."},
+  {sec:"81",title:"ROC's Register of Charges",ch:"Ch 8 · Registration of Charges",freq:1,hook:"81 = 9². ROC maintains master register. Open for public inspection."},
+  {sec:"82",title:"Satisfaction of Charge",ch:"Ch 8 · Registration of Charges",freq:1,hook:"82 = clear. Charge paid off = file CHG-4 within 30 days."},
+  {sec:"83",title:"Charge Holder Intimates Satisfaction",ch:"Ch 8 · Registration of Charges",freq:1,hook:"83 = 82+1. If company does not file satisfaction, charge holder can."},
+  {sec:"84",title:"Receiver Appointed — Intimation",ch:"Ch 8 · Registration of Charges",freq:1,hook:"84 = 8+4=12. Receiver over charged property — intimate ROC within 30 days."},
+  {sec:"85",title:"Company's Own Register of Charges",ch:"Ch 8 · Registration of Charges",freq:1,hook:"85 = internal record. Company's own register — separate from ROC's."},
+  {sec:"86",title:"Penalty for Contravention (Charges)",ch:"Ch 8 · Registration of Charges",freq:1,hook:"86 = fine. Rs 1 lakh to Rs 10 lakh."},
+  {sec:"87",title:"CG can Extend Time for Registration",ch:"Ch 8 · Registration of Charges",freq:1,hook:"87 = grace. Central Government condones delay. Last resort."},
+  {sec:"96",title:"Annual General Meeting (AGM)",ch:"Ch 9 · Management & Administration",freq:4,hook:"96 = 9 months + 6 months. First AGM within 9 months of FY close, subsequent within 6. The numbers ARE the section."},
+  {sec:"97",title:"NCLT Power to Call AGM",ch:"Ch 9 · Management & Administration",freq:1,hook:"97 = 96+1. Company fails AGM (96), NCLT steps in (97)."},
+  {sec:"98",title:"NCLT Power to Call EOGM",ch:"Ch 9 · Management & Administration",freq:1,hook:"98 = 100-2. NCLT calls EOGM — just before 100 (company's own EOGM)."},
+  {sec:"99",title:"Penalty for AGM Default",ch:"Ch 9 · Management & Administration",freq:1,hook:"99 = 9+9=18. Rs 1 lakh fine + Rs 5000/day continuing default."},
+  {sec:"100",title:"Extraordinary General Meeting (EOGM)",ch:"Ch 9 · Management & Administration",freq:3,hook:"100 = emergency. EOGM = extra urgent meeting. Round number = extra meeting."},
+  {sec:"101",title:"Notice of General Meeting",ch:"Ch 9 · Management & Administration",freq:2,hook:"101 = 21 days notice. 1+0+1=2, notice = 21 clear days. Follows calling of meeting (100)."},
+  {sec:"102",title:"Explanatory Statement",ch:"Ch 9 · Management & Administration",freq:3,hook:"102 = explanation. Annexed with notice (101). One step after notice — explains special business."},
+  {sec:"103",title:"Quorum for Meetings",ch:"Ch 9 · Management & Administration",freq:4,hook:"103 = gate. Can't enter without quorum. Public: 5/15/30. Private: 2. Adjourned meeting rules."},
+  {sec:"104",title:"Chairman of Meeting",ch:"Ch 9 · Management & Administration",freq:1,hook:"104 = between quorum and proxy. Elected by show of hands. Simple provision."},
+  {sec:"105",title:"Proxies",ch:"Ch 9 · Management & Administration",freq:3,hook:"103=quorum (must be there), 105=proxy (don't have to be there). The skip 103→105 = skipping attendance. 48 hours deposit rule."},
+  {sec:"106",title:"Restriction on Voting Rights",ch:"Ch 9 · Management & Administration",freq:2,hook:"106 = 103+3. Calls in arrears = cannot vote. Voting restriction after quorum check."},
+  {sec:"107",title:"Voting by Show of Hands",ch:"Ch 9 · Management & Administration",freq:1,hook:"107 = 1 hand 1 vote. Simplest voting — one hand per member regardless of shares."},
+  {sec:"108",title:"e-Voting",ch:"Ch 9 · Management & Administration",freq:1,hook:"108 = digital voting. Mandatory for listed + 1000+ member companies."},
+  {sec:"109",title:"Demand for Poll",ch:"Ch 9 · Management & Administration",freq:1,hook:"109 = 108+1. After e-voting comes poll. Proportionate voting based on shares held."},
+  {sec:"110",title:"Postal Ballot",ch:"Ch 9 · Management & Administration",freq:1,hook:"110 = 11+0. 11 matters mandatorily require postal ballot."},
+  {sec:"111",title:"Circulation of Members' Resolution",ch:"Ch 9 · Management & Administration",freq:1,hook:"111 = triple 1. 1/20th of members OR 1/10th paid-up capital can circulate."},
+  {sec:"112",title:"President/Governor Representation",ch:"Ch 9 · Management & Administration",freq:1,hook:"112 = government. Central/State Govt representative at meetings."},
+  {sec:"113",title:"Body Corporate Representation",ch:"Ch 9 · Management & Administration",freq:1,hook:"113 = corporate proxy. Company as member = authorised representative attends."},
+  {sec:"114",title:"Ordinary and Special Resolutions",ch:"Ch 9 · Management & Administration",freq:3,hook:"114 = 1 vs 4. OR = simple majority (1). SR = 3/4 majority (4 = denominator). Both in 114."},
+  {sec:"115",title:"Special Notice",ch:"Ch 9 · Management & Administration",freq:1,hook:"115 = 114+1. After defining resolutions (114), special notice (115). 14 days from member, 21 days from company."},
+  {sec:"116",title:"Resolutions at Adjourned Meetings",ch:"Ch 9 · Management & Administration",freq:1,hook:"116 = 115+1. Resolution at adjourned meeting = passed on date of adjourned meeting, not original."},
+  {sec:"117",title:"Filing of Resolutions (MGT-14)",ch:"Ch 9 · Management & Administration",freq:1,hook:"117 = file. After resolution passed (114), file with ROC within 30 days."},
+  {sec:"118",title:"Minutes of Meetings",ch:"Ch 9 · Management & Administration",freq:1,hook:"118 = 1 month. Minutes recorded within 30 days. Chairman signs at next meeting."},
+  {sec:"119",title:"Inspection of Minute Books",ch:"Ch 9 · Management & Administration",freq:1,hook:"119 = 118+1. After recording minutes (118), members can inspect (119)."},
+  {sec:"120",title:"Maintenance of Records in Electronic Form",ch:"Ch 9 · Management & Administration",freq:1,hook:"120 = digital storage. Electronic records permitted."},
+  {sec:"121",title:"Report on AGM (Listed Companies)",ch:"Ch 9 · Management & Administration",freq:1,hook:"121 = listed only. Report filed with ROC within 30 days."},
+  {sec:"122",title:"Applicability to OPC",ch:"Ch 9 · Management & Administration",freq:1,hook:"122 = last in meetings. OPC exempted from AGM/EOGM. Final provision = exemption."},
+  {sec:"123",title:"Declaration and Payment of Dividend",ch:"Ch 10 · Dividend",freq:4,hook:"123 = 1-2-3 easy. Simplest act = simplest number. Declare → Appropriate → Pay. Depreciation first."},
+  {sec:"124",title:"Unpaid Dividend Account (UDA)",ch:"Ch 10 · Dividend",freq:3,hook:"124 = 123+1. If declared but unpaid (124). Transfer within 7 days of 30-day period."},
+  {sec:"125",title:"IEPF — Investor Education & Protection Fund",ch:"Ch 10 · Dividend",freq:1,hook:"125 = 7 years. Unpaid for 7 years → IEPF. 1+2+5=8 — think 7+1 step process."},
+  {sec:"126",title:"Dividend Held in Abeyance",ch:"Ch 10 · Dividend",freq:1,hook:"126 = disputed. Disputed transfer = dividend held in abeyance."},
+  {sec:"127",title:"Punishment for Failure to Pay Dividend",ch:"Ch 10 · Dividend",freq:3,hook:"127 = 7 days punishment. Pay within 30 days. 1+2+7=10 lakh fine + imprisonment."},
+  {sec:"128",title:"Books of Account",ch:"Ch 11 · Accounts of Companies",freq:3,hook:"128 = 8 years. Keep books for 8 years. The 8 is literally inside 128."},
+  {sec:"129",title:"Financial Statements",ch:"Ch 11 · Accounts of Companies",freq:3,hook:"129 = 128+1. After keeping books (128), prepare financial statements (129). True & fair view."},
+  {sec:"129A",title:"Periodical Financial Results",ch:"Ch 11 · Accounts of Companies",freq:1,hook:"129A = amendment. A = Added later. Unlisted companies file periodical results."},
+  {sec:"130",title:"Re-opening of Accounts",ch:"Ch 11 · Accounts of Companies",freq:1,hook:"130 = 13+0. NCLT/Court orders only — fraud/mismanagement. Cannot voluntarily reopen."},
+  {sec:"131",title:"Voluntary Revision of Financial Statements",ch:"Ch 11 · Accounts of Companies",freq:1,hook:"131 = 130+1. Cannot reopen (130), but can revise voluntarily (131). Tribunal permission, once/year."},
+  {sec:"132",title:"NFRA",ch:"Ch 11 · Accounts of Companies",freq:2,hook:"132 = regulator. National Financial Reporting Authority. 1+3+2=6 functions of NFRA."},
+  {sec:"133",title:"CG Prescribes Accounting Standards",ch:"Ch 11 · Accounts of Companies",freq:1,hook:"133 = 13+3. CG prescribes AS on NFRA recommendation. Enabling provision."},
+  {sec:"134",title:"Board's Report",ch:"Ch 11 · Accounts of Companies",freq:1,hook:"134 = 13+4. Directors' responsibility statement, CSR report, extract of annual return."},
+  {sec:"135",title:"Corporate Social Responsibility (CSR)",ch:"Ch 11 · Accounts of Companies",freq:4,hook:"135 = 5 at the end. Rs 5Cr net profit OR Rs 1000Cr turnover OR Rs 500Cr networth → 2% CSR. The 5 is the last digit."},
+  {sec:"136",title:"Right of Member to Financial Statement Copies",ch:"Ch 11 · Accounts of Companies",freq:1,hook:"136 = member's right. 21 days before AGM, statements sent to members."},
+  {sec:"137",title:"Copy of Financial Statement Filed with ROC",ch:"Ch 11 · Accounts of Companies",freq:2,hook:"137 = 136+1. After sending to members (136), file with ROC (137) within 30 days of AGM."},
+  {sec:"138",title:"Internal Audit",ch:"Ch 11 · Accounts of Companies",freq:2,hook:"138 = last in accounts, leads to external audit (139). Internal before external."},
+  {sec:"139",title:"Appointment of Auditors",ch:"Ch 12 · Audit & Auditors",freq:4,hook:"139 = start of auditor's life. First: Board 30 days / EGM 90 days. Subsequent: 5+5 rotation. Govt company = CAG."},
+  {sec:"140",title:"Removal / Resignation of Auditor",ch:"Ch 12 · Audit & Auditors",freq:3,hook:"140 = 139+1. One step after appointment = removal. SR + CG approval. Resignation to ROC in 30 days."},
+  {sec:"141",title:"Eligibility, Qualifications, Disqualifications",ch:"Ch 12 · Audit & Auditors",freq:3,hook:"141 = Not this 1. The 1 at end = exclusion. Who CANNOT be auditor — 20-company limit, relative, debtor."},
+  {sec:"142",title:"Remuneration of Auditors",ch:"Ch 12 · Audit & Auditors",freq:1,hook:"142 = 141+1. After eligibility (141), fix remuneration (142). Set by appointing authority."},
+  {sec:"143",title:"Powers and Duties of Auditors",ch:"Ch 12 · Audit & Auditors",freq:4,hook:"143 = I Love You. Love this section — kuch bhi aa sakta hai. Access to books, CARO, fraud reporting to CG."},
+  {sec:"144",title:"Auditor Not to Render Certain Services",ch:"Ch 12 · Audit & Auditors",freq:1,hook:"144 = 143+1. Right after powers (143) = what auditor CANNOT do (144). Design, investment banking etc."},
+  {sec:"145",title:"Auditor to Sign Audit Report",ch:"Ch 12 · Audit & Auditors",freq:1,hook:"145 = sign. Auditor must sign with name, registration number. Compliance provision."},
+  {sec:"146",title:"Auditors to Attend General Meeting",ch:"Ch 12 · Audit & Auditors",freq:1,hook:"146 = attend. Right to attend AGM — not obligatory but entitled to speak."},
+  {sec:"147",title:"Punishment for Contravention (Audit)",ch:"Ch 12 · Audit & Auditors",freq:2,hook:"147 = last warning. 1+4+7=12. Penalty on auditors for contravention."},
+  {sec:"148",title:"Cost Audit",ch:"Ch 12 · Audit & Auditors",freq:1,hook:"148 = last section before foreign companies. CG specifies cost audit for certain companies."},
+  {sec:"379",title:"Application of Act to Foreign Companies",ch:"Ch 13 · Foreign Companies",freq:3,hook:"379 = 3+7+9=19. Brings foreign companies under Indian law. 50%+ Indian-held = comply as Indian company."},
+  {sec:"380",title:"Documents Filed by Foreign Companies with ROC",ch:"Ch 13 · Foreign Companies",freq:2,hook:"380 = 379+1. After coming under Indian law (379), file documents (380) within 30 days."},
+  {sec:"381",title:"Accounts of Foreign Company",ch:"Ch 13 · Foreign Companies",freq:1,hook:"381 = 380+1. After documents filed (380), maintain Indian P&L + BS (381)."},
+  {sec:"382",title:"Display of Name and Country",ch:"Ch 13 · Foreign Companies",freq:1,hook:"382 = nameplate. Every office in India = display name + country of incorporation."},
+  {sec:"383",title:"Service on Foreign Company",ch:"Ch 13 · Foreign Companies",freq:1,hook:"383 = 3+8+3=14. Serve documents on authorised agent in India."},
+  {sec:"384",title:"Other Obligations (Debentures, Annual Return, Charges)",ch:"Ch 13 · Foreign Companies",freq:1,hook:"384 = 380+4. All same obligations as Indian companies apply."},
+  {sec:"386",title:"Interpretation (Foreign Companies Chapter)",ch:"Ch 13 · Foreign Companies",freq:1,hook:"386 = definitions for this chapter. 'Place of business' defined specifically here."},
+  {sec:"390",title:"Indian Depository Receipts (IDR)",ch:"Ch 13 · Foreign Companies",freq:2,hook:"390 = 3+9+0=12. Foreign company raises money IN India via IDR. Reverse of GDR (Sec 41)."},
+  {sec:"392",title:"Punishment for Contravention (Foreign Companies)",ch:"Ch 13 · Foreign Companies",freq:1,hook:"392 = 379+13. Penalty for non-compliance. Fine on company + officers in default."},
+  {sec:"393",title:"Non-Compliance Does Not Affect Contract Validity",ch:"Ch 13 · Foreign Companies",freq:1,hook:"393 = saving. Contracts remain valid even if company violated this chapter."},
+];
+
+const CHAPTERS = ["All Chapters",...[...new Set(ALL.map(s=>s.ch))]];
+const FREQ_LABEL = {4:"🔴 MUST DO",3:"🟠 High",2:"🟡 Moderate",1:"🔵 Occasional",0:"⚪ Skip"};
+const FREQ_COLOR = {4:"#ef4444",3:"#f97316",2:"#ca8a04",1:"#3b82f6",0:"#6b7280"};
+const FREQ_BG    = {4:"#fef2f2",3:"#fff7ed",2:"#fefce8",1:"#eff6ff",0:"#1f2937"};
+
+const MAP_DATA = [
+  {range:"1–2",   ch:"Ch 1 · Introduction",           key:"Sec 2 — Definitions",           color:"#8b5cf6"},
+  {range:"3–22",  ch:"Ch 2 · Formation",               key:"3, 3A, 7, 8, 10A",              color:"#6366f1"},
+  {range:"4–22",  ch:"Ch 3 · MOA & AOA",               key:"4, 5, 13, 14, 18",              color:"#3b82f6"},
+  {range:"23–42", ch:"Ch 4 · Prospectus & Allotment",  key:"25, 31, 32, 33, 35, 42",        color:"#06b6d4"},
+  {range:"43–72", ch:"Ch 5 · Share Capital & Deb.",    key:"47, 51, 52, 54, 62, 63, 68, 69",color:"#10b981"},
+  {range:"73–76A",ch:"Ch 7 · Company Deposits",        key:"73, 76",                         color:"#84cc16"},
+  {range:"77–87", ch:"Ch 8 · Registration of Charges", key:"77",                             color:"#eab308"},
+  {range:"88–95", ch:"Ch 6 · Membership",              key:"88, 92",                         color:"#f97316"},
+  {range:"96–122",ch:"Ch 9 · Management & Admin.",     key:"96, 100, 102, 103, 105, 114",    color:"#ef4444"},
+  {range:"123–127",ch:"Ch 10 · Dividend",              key:"123, 124, 127",                  color:"#ec4899"},
+  {range:"128–138",ch:"Ch 11 · Accounts of Companies", key:"128, 129, 135, 138",             color:"#a855f7"},
+  {range:"139–148",ch:"Ch 12 · Audit & Auditors",      key:"139, 140, 141, 143",             color:"#f43f5e"},
+  {range:"379–393",ch:"Ch 13 · Foreign Companies",     key:"379, 380",                       color:"#64748b"},
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let currentTab = "study";
+let openCards = {};
+
+// Study filters
+let studyCh = "All Chapters", studyFreq = "all", studySearch = "";
+
+// Drill state
+let drillStarted = false, drillPool = [], drillIdx = 0, drillRevealed = false;
+let drillScore = {correct:0,wrong:0,skipped:0}, drillDone = false, drillWrongList = [];
+let drillCh = "All Chapters", drillFreq = "4", drillType = "title→sec";
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function fk(f){return Math.min(Math.max(f,0),4);}
+function e(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function render(){
+  const c = document.getElementById("content");
+  if(currentTab==="study") c.innerHTML = renderStudy();
+  else if(currentTab==="drill") c.innerHTML = renderDrill();
+  else c.innerHTML = renderMap();
+}
+
+// ── STUDY ──
+function renderStudy(){
+  const filtered = ALL.filter(s=>{
+    const chOk = studyCh==="All Chapters"||s.ch===studyCh;
+    const fOk = studyFreq==="all"||s.freq===parseInt(studyFreq);
+    const srch = !studySearch||s.title.toLowerCase().includes(studySearch.toLowerCase())||String(s.sec).toLowerCase().includes(studySearch.toLowerCase());
+    return chOk&&fOk&&srch;
+  });
+
+  const chOptions = CHAPTERS.map(c=>`<option value="${e(c)}" ${studyCh===c?"selected":""}>${e(c)}</option>`).join("");
+  const cards = filtered.map((s,i)=>{
+    const fc=FREQ_COLOR[fk(s.freq)], fb=FREQ_BG[fk(s.freq)];
+    const isOpen = openCards[s.sec+s.ch];
+    return `<div class="card" style="border-color:${fc}22;border-left-color:${fc}" onclick="toggleCard('${e(s.sec)}','${e(s.ch)}')">
+      <div class="card-row">
+        <span class="sec-badge" style="background:${fb};color:${fc}">Sec ${e(s.sec)}</span>
+        <span class="card-title">${e(s.title)}</span>
+        <span class="freq-tag" style="color:${fc};border-color:${fc};background:${fb}55">${FREQ_LABEL[fk(s.freq)]}</span>
+        <span class="card-arrow">${isOpen?"▲":"▼"}</span>
+      </div>
+      <div class="card-detail ${isOpen?"open":""}">
+        <div class="detail-ch">${e(s.ch)}</div>
+        <div class="detail-hook">💡 ${e(s.hook)}</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  return `
+    <div class="filters">
+      <input type="text" placeholder="Search..." value="${e(studySearch)}" oninput="studySearch=this.value;render()">
+      <select onchange="studyFreq=this.value;render()">
+        <option value="all" ${studyFreq==="all"?"selected":""}>All Frequencies</option>
+        <option value="4" ${studyFreq==="4"?"selected":""}>🔴 Must Do</option>
+        <option value="3" ${studyFreq==="3"?"selected":""}>🟠 High</option>
+        <option value="2" ${studyFreq==="2"?"selected":""}>🟡 Moderate</option>
+        <option value="1" ${studyFreq==="1"?"selected":""}>🔵 Occasional</option>
+      </select>
+      <select onchange="studyCh=this.value;openCards={};render()">${chOptions}</select>
+    </div>
+    <div class="count">${filtered.length} sections · tap card to reveal memory hook</div>
+    ${cards}`;
+}
+
+// ── DRILL ──
+function renderDrill(){
+  if(!drillStarted) return renderDrillConfig();
+  if(drillDone) return renderDrillDone();
+  return renderDrillCard();
+}
+
+function renderDrillConfig(){
+  const chOptions = CHAPTERS.map(c=>`<option value="${e(c)}" ${drillCh===c?"selected":""}>${e(c)}</option>`).join("");
+  return `<div style="padding:10px 0">
+    <div class="drill-box">
+      <div class="drill-label">CHAPTER</div>
+      <select class="full" onchange="drillCh=this.value">${chOptions}</select>
+      <div class="drill-label">MINIMUM FREQUENCY</div>
+      <select class="full" onchange="drillFreq=this.value">
+        <option value="4" ${drillFreq==="4"?"selected":""}>Must Do only (4)</option>
+        <option value="3" ${drillFreq==="3"?"selected":""}>High + above (3+)</option>
+        <option value="2" ${drillFreq==="2"?"selected":""}>Moderate + above (2+)</option>
+        <option value="1" ${drillFreq==="1"?"selected":""}>All sections</option>
+      </select>
+      <div class="drill-label">DRILL TYPE</div>
+      <div class="drill-types">
+        <button class="dtype-btn ${drillType==="title→sec"?"active":""}" onclick="drillType='title→sec';render()">See Title<br>→ Recall Section No.</button>
+        <button class="dtype-btn ${drillType==="sec→title"?"active":""}" onclick="drillType='sec→title';render()">See Section No.<br>→ Recall Title</button>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startDrill()">Start Drill →</button>
+  </div>`;
+}
+
+function renderDrillCard(){
+  const s = drillPool[drillIdx];
+  const total = drillPool.length;
+  const pct = Math.round((drillIdx/total)*100);
+  const question = drillType==="title→sec" ? s.title : `Section ${s.sec}`;
+  const answerText = drillType==="title→sec" ? `Section ${s.sec}` : s.title;
+  const answerSub = drillType==="title→sec" ? s.title : `Section ${s.sec}`;
+
+  return `
+    <div style="padding:8px 0">
+      <div class="progress-row">
+        <span style="font-size:12px;color:#9ca3af">${drillIdx+1} / ${total}</span>
+        <span style="font-size:11px;color:#22c55e">✓ ${drillScore.correct}</span>
+        <span style="font-size:11px;color:#ef4444">✗ ${drillScore.wrong}</span>
+        <span style="font-size:11px;color:#6b7280">→ ${drillScore.skipped}</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div class="q-card">
+        <div class="q-label">${drillType==="title→sec"?"WHAT SECTION NUMBER?":"WHAT IS THIS SECTION?"}</div>
+        <div class="q-text">${e(question)}</div>
+        <div class="q-ch">${e(s.ch)}</div>
+      </div>
+      ${!drillRevealed
+        ? `<button class="reveal-btn" onclick="revealDrill()">Reveal Answer</button>`
+        : `<div class="ans-box">
+            <div class="ans-label">ANSWER</div>
+            <div class="ans-text">${e(answerText)}</div>
+            <div class="ans-sub">${e(answerSub)}</div>
+           </div>
+           <div class="hook-box">💡 ${e(s.hook)}</div>
+           <div class="ans-btns">
+             <button class="btn-correct" onclick="answerDrill('correct')">✓ Got it</button>
+             <button class="btn-wrong" onclick="answerDrill('wrong')">✗ Missed</button>
+             <button class="btn-skip" onclick="answerDrill('skipped')">→</button>
+           </div>`
+      }
+    </div>`;
+}
+
+function renderDrillDone(){
+  const total = drillScore.correct+drillScore.wrong+drillScore.skipped;
+  const pct = total ? Math.round((drillScore.correct/total)*100) : 0;
+  const emoji = pct>=80?"🏆":pct>=50?"💪":"📚";
+  const pctColor = pct>=80?"#22c55e":pct>=50?"#f97316":"#ef4444";
+  return `<div class="done-wrap">
+    <div class="done-emoji">${emoji}</div>
+    <div class="done-title">Session Complete</div>
+    <div class="done-sub">${total} sections drilled</div>
+    <div class="score-row">
+      <div class="score-box"><div class="score-num" style="color:#22c55e">${drillScore.correct}</div><div class="score-lbl">✓ Correct</div></div>
+      <div class="score-box"><div class="score-num" style="color:#ef4444">${drillScore.wrong}</div><div class="score-lbl">✗ Wrong</div></div>
+      <div class="score-box"><div class="score-num" style="color:#6b7280">${drillScore.skipped}</div><div class="score-lbl">→ Skipped</div></div>
+    </div>
+    <div class="pct-text" style="color:${pctColor}">${pct}% accuracy</div>
+    ${drillWrongList.length>0?`<button class="redrill-btn" onclick="drillWrong()">Drill Wrong Ones Again (${drillWrongList.length})</button>`:""}
+    <button class="newsession-btn" onclick="drillStarted=false;render()">New Session</button>
+  </div>`;
+}
+
+function renderMap(){
+  const cards = MAP_DATA.map(m=>`
+    <div class="map-card" style="border-left-color:${m.color}">
+      <div class="map-range" style="background:${m.color}22;color:${m.color}">${m.range}</div>
+      <div><div class="map-ch">${e(m.ch)}</div><div class="map-key">Key: ${e(m.key)}</div></div>
+    </div>`).join("");
+  return `<div style="padding:8px 0 20px">
+    <div class="map-intro">Know this map → you always know which range to look in</div>
+    ${cards}
+    <div class="golden-box">
+      <div class="golden-title">THE GOLDEN RULE</div>
+      <div class="golden-text">Sections follow the company's life journey:<br>
+      <span style="color:#fef3c7">Birth → Structure → Money → People → Meetings → Accounts → Audit</span><br><br>
+      When asked about a section, ask: <span style="color:#f97316">where does this topic fall in the company's life?</span> That gives you the range. Then sequence logic gives the exact number.</div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════
+function switchTab(tab, btn){
+  currentTab=tab;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+function toggleCard(sec, ch){
+  const key=sec+ch;
+  openCards[key]=!openCards[key];
+  render();
+  if(openCards[key]){
+    setTimeout(()=>{
+      const cards=document.querySelectorAll(".card");
+      for(const c of cards){if(c.querySelector(".sec-badge")?.textContent.includes(sec)){c.scrollIntoView({behavior:"smooth",block:"nearest"});break;}}
+    },50);
+  }
+}
+function startDrill(){
+  const base = ALL.filter(s=>{
+    const chOk = drillCh==="All Chapters"||s.ch===drillCh;
+    const fOk = s.freq>=parseInt(drillFreq);
+    return chOk&&fOk;
+  });
+  drillPool=shuffle(base);
+  drillIdx=0; drillRevealed=false;
+  drillScore={correct:0,wrong:0,skipped:0};
+  drillDone=false; drillWrongList=[];
+  drillStarted=true;
+  render();
+}
+function revealDrill(){ drillRevealed=true; render(); }
+function answerDrill(result){
+  if(result==="wrong") drillWrongList.push(drillPool[drillIdx]);
+  drillScore[result]++;
+  if(drillIdx+1>=drillPool.length){ drillDone=true; render(); return; }
+  drillIdx++; drillRevealed=false; render();
+  document.getElementById("content").scrollTo({top:0,behavior:"smooth"});
+}
+function drillWrong(){
+  drillPool=shuffle(drillWrongList);
+  drillIdx=0; drillRevealed=false;
+  drillScore={correct:0,wrong:0,skipped:0};
+  drillDone=false; drillWrongList=[];
+  render();
+}
+
+// ═══════════════════════════════════════
+// PWA — SERVICE WORKER
+// ═══════════════════════════════════════
+const swCode = `
+self.addEventListener('install',e=>{
+  e.waitUntil(caches.open('law-memory-v1').then(c=>c.addAll([location.href])));
+  self.skipWaiting();
+});
+self.addEventListener('activate',e=>self.clients.claim());
+self.addEventListener('fetch',e=>{
+  e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(e.request))));
+});`;
+if('serviceWorker' in navigator){
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'}).catch(()=>{});
+}
+
+// ═══════════════════════════════════════
+// PWA — INSTALL BANNER
+// ═══════════════════════════════════════
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredPrompt=e; showInstallBanner();
+});
+function showInstallBanner(){
+  if(document.getElementById('install-banner')) return;
+  const b=document.createElement('div');
+  b.id='install-banner'; b.className='install-banner';
+  b.innerHTML=`<span class="install-icon">⚖️</span>
+    <div class="install-text-wrap">
+      <div class="install-title">Add to Home Screen</div>
+      <div class="install-sub">Open like an app, works offline</div>
+    </div>
+    <button class="install-btn" onclick="installApp()">Install</button>
+    <button class="install-close" onclick="document.getElementById('install-banner').remove()">✕</button>`;
+  document.body.appendChild(b);
+}
+async function installApp(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt=null;
+  document.getElementById('install-banner')?.remove();
+}
+// iOS Safari
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+if(isIOS&&!window.navigator.standalone){
+  setTimeout(()=>{
+    if(document.getElementById('install-banner')) return;
+    const b=document.createElement('div');
+    b.id='install-banner'; b.className='install-banner'; b.style.alignItems='flex-start';
+    b.innerHTML=`<span class="install-icon">⚖️</span>
+      <div class="install-text-wrap">
+        <div class="install-title">Add to Home Screen</div>
+        <div class="install-sub">Tap <b style="color:#f97316">Share ⬆️</b> in Safari, then <b style="color:#f97316">"Add to Home Screen"</b></div>
+      </div>
+      <button class="install-close" onclick="document.getElementById('install-banner').remove()">✕</button>`;
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),12000);
+  },1500);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+render();
+</script>
+</body>
+</html>
